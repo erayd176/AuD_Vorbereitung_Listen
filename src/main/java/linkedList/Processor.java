@@ -66,22 +66,55 @@ public class Processor {
         return head;
     }
 
+    static <Integer> ListItem<Integer> inFlat (ListItem<ListItem<Integer>> listOfLists, Integer i){
+        if(listOfLists==null){
+            return null;
+        }
+        ListItem<Integer> head = null;
+        ListItem<Integer> tail = null;
+        ListItem<ListItem<Integer>> p = listOfLists;
+
+        while (p!=null){
+            ListItem<Integer> listInList = p.key;
+            ListItem<Integer> tmp = new ListItem<>();
+            tmp.key = listInList.key;
+            while(listInList!=null){
+                if(head==null){
+                    head = tail = tmp;
+                }else{
+                    tail.next = new ListItem<>();
+                    tail = tail.next;
+                    tail.key = listInList.key;
+                }
+                if(listInList.next==null&&(int)listInList.key%5==0){
+                    tail.next = new ListItem<>();
+                    tail = tail.next;
+                    tail.key = i;
+                }
+                listInList = listInList.next;
+            }
+
+            p=p.next;
+        }
+        return head;
+    }
 
 
 
     public static void main(String[]args){
         ListItem<Integer> test = new ListItem<>();
-        Integer[] arr = {1,20,30,4,5,60,7};
+        Integer[] arr = {1,20,30,4,5,60,7,15};
         test.autoFill(arr);
         System.out.println(test.toString());
 //here comes Greater Test
         ListItem<ListItem<Integer>> test2;
         test2 = alwaysGreater(test);
         System.out.println(test2.toString());
-//here comes makeFlatList
-        ListItem<Integer> test3;
-        test3 = makeFlatList(test2);
-        System.out.println(test3.toString());
+        ListItem<Integer> test5 = inFlat(test2,31);
+        //here comes makeFlatList
+        //ListItem<Integer> test3;
+        //test3 = makeFlatList(test2);
+        System.out.println(test5.toString());
     }
 
 }
